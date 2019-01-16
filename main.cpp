@@ -4,6 +4,9 @@
 
 int main() {
     Menu menu;
-    menu.showMenu();
+    menu.excute();
+
+
+    system("pause");
     return 0;
 }

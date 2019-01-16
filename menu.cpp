@@ -3,8 +3,14 @@
 #include <iostream>
 #include <string>
 
+#include "Game.h"
 
-void Menu::showMenu() {
+void Menu::excute() {
+    mainMenu();
+    select();
+}
+
+void Menu::mainMenu() {
     std::string prompt = "Please input the number of your choice:";
     std::string choiceOne = "1. Start";
     std::string choiceTwo = "2. Press any key to quit";
@@ -16,32 +22,34 @@ void Menu::showMenu() {
             << choiceTwo << std::endl;
 }
 
-int Menu::inputNum() {
+void Menu::select() {
     char number;
     std::cin >> number;
     switch(number) {   
         case '1':
-            return 1;
+            system("clear");
+            Game game;
+            game.startGame();
+            break;
         default:
-            return -1;
+            exit(1);
     }
 }
 
-void Menu::goBack() {
-
-}
-
 void Menu::opening() {
-    std::string title = "Welcome to my game, Snake";
-    std::string description = "I wrote this game to practice my C++ skill";
-    std::string closingStatement = "Enjoy!";
-    std::string asciiLineOne =   "      _____                    _";
-    std::string asciiLineTwo =   "     / ____|                  | |";
-    std::string asciiLineThree = "     | (___    _ __     __ _  | | __   ___";
-    std::string asciiLineFour =  "      \\___ \\  | '_ \\   / _` | | |/ /  / _ \\";
-    std::string asciiLineFive =  "     ____)| | | | | | (_| | | | <  |  |__/";
-    std::string asciiLineSix =   "    |_______/ |_| |_|  \\__,_| |_|\\_\\  \\___|";
-    std::cout << title << std::endl
+    std::string title =             "        Welcome to my game, Snake";
+    std::string description =       "I wrote this game to practice my C++ skill";
+    std::string closingStatement =  "                Enjoy!";
+
+    std::string asciiLineOne =      "      _____                    _";
+    std::string asciiLineTwo =      "     / ____|                  | |";
+    std::string asciiLineThree =    "     | (___    _ __     __ _  | | __   ___";
+    std::string asciiLineFour =     "      \\___ \\  | '_ \\   / _` | | |/ /  / _ \\";
+    std::string asciiLineFive =     "     ____)| | | | | | (_| | | | <  |  |__/";
+    std::string asciiLineSix =      "    |_______/ |_| |_|  \\__,_| |_|\\_\\  \\___|";
+
+    std::cout << std::endl
+            << title << std::endl
             << description <<std::endl
             << closingStatement << std::endl
             << asciiLineOne << std::endl

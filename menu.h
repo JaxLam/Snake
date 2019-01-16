@@ -3,12 +3,11 @@
 
 class Menu {
     public:
-        void showMenu();
-        int inputNum();
-        void goBack();
+        void excute();
     private:
+        void mainMenu();
+        void select();
         void opening();
-
 };
 
 
