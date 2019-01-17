@@ -2,6 +2,6 @@
 #define SYSTEM_H
 
 int arrowKeys();
-void clear();
+void clearScreen();
 
 #endif

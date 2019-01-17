@@ -5,9 +5,9 @@
 void Game::startGame() {
     GameBoard gameBoard;
 
-    clear();
-    gameBoard.showBoard();
     while(true) {
+        clearScreen();
+        gameBoard.showBoard();
         gameBoard.move();
     }
 }

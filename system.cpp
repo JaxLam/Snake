@@ -7,16 +7,23 @@ int arrowKeys() {
     return _getch();    
 }
 
-void clear() {
+void clearScreen() {
     system("cls");
 }
 
 #else
-#include <ncurses.h>
+#include <curses.h>
 int arrowKeys() {
-    return getch();
+    initscr();
+    cbreak();
+    noecho();
+    keypad(stdscr, TRUE);
+    int key;
+    key = getch();
+    endwin();
+    return key;
 }
-void clear() {
+void clearScreen() {
     system("clear");
 }
 #endif

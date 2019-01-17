@@ -3,6 +3,15 @@
 #include <iostream>
 #include "system.h"
 
+#ifdef __WIN32
+#define KEY_UP 72
+#define KEY_DOWN 80
+#define KEY_LEFT 75
+#define KEY_DOWN 77
+#else
+#include <curses.h>
+#endif
+
 const int MAX_HEIGHT = 25;
 const int MAX_WIDTH = 50;
 const int MIN_HEIGHT = 5;
@@ -78,23 +87,23 @@ void GameBoard::showBoard() const {
 
 void GameBoard::move() {
         switch(arrowKeys()) {
-        case 72:
+        case KEY_UP:
             snakeHead.y--;
             snakeDir.front() = 1;
             break;
-        case 80:
+        case KEY_DOWN:
             snakeHead.y++;
             snakeDir.front() = 2;
             break;
-        case 75:
+        case KEY_LEFT:
             snakeHead.x--;
             snakeDir.front() = 3;
             break;
-        case 77:
+        case KEY_RIGHT:
             snakeHead.x++;
             snakeDir.front() = 4;
             break;
+        default:
+            break;
         }
-    clear();
-    showBoard();
 }
