@@ -4,6 +4,7 @@
 #include <string>
 
 #include "Game.h"
+#include "system.h"
 
 void Menu::excute() {
     mainMenu();
@@ -14,7 +15,7 @@ void Menu::mainMenu() {
     std::string prompt = "Please input the number of your choice:";
     std::string choiceOne = "1. Start";
     std::string choiceTwo = "2. Press any key to quit";
-    system("clear");
+    clear();
     opening();
     std::cout << std::endl
             << prompt << std::endl
@@ -27,7 +28,7 @@ void Menu::select() {
     std::cin >> number;
     switch(number) {   
         case '1':
-            system("clear");
+            clear();
             Game game;
             game.startGame();
             break;

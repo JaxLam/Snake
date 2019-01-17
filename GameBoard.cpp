@@ -1,7 +1,7 @@
 #include "GameBoard.h"
 
 #include <iostream>
-#include <conio.h>
+#include "system.h"
 
 const int MAX_HEIGHT = 25;
 const int MAX_WIDTH = 50;
@@ -77,8 +77,7 @@ void GameBoard::showBoard() const {
 }
 
 void GameBoard::move() {
-    int dir = 0;
-        switch((dir = getchar())) {
+        switch(arrowKeys()) {
         case 72:
             snakeHead.y--;
             snakeDir.front() = 1;
@@ -96,6 +95,6 @@ void GameBoard::move() {
             snakeDir.front() = 4;
             break;
         }
-    system("cls");
+    clear();
     showBoard();
 }

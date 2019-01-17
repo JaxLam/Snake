@@ -1,10 +1,11 @@
 #include "Game.h"
 #include "GameBoard.h"
+#include "system.h"
 
 void Game::startGame() {
     GameBoard gameBoard;
 
-    system("cls");
+    clear();
     gameBoard.showBoard();
     while(true) {
         gameBoard.move();

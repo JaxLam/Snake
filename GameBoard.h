@@ -20,6 +20,7 @@ class GameBoard {
     int width;
     Coordinate snakeHead;
     std::list<int> snakeDir;
+    void showHead() const;
     
 };
 
