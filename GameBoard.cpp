@@ -3,11 +3,6 @@
 #include <iostream>
 #include <conio.h>
 
-#define KEY_UP 72
-#define KEY_DOWN 80
-#define KEY_LEFT 75
-#define KEY_RIGHT 77
-
 const int MAX_HEIGHT = 25;
 const int MAX_WIDTH = 50;
 const int MIN_HEIGHT = 5;
@@ -83,20 +78,20 @@ void GameBoard::showBoard() const {
 
 void GameBoard::move() {
     int dir = 0;
-        switch((dir = _getch())) {
-        case KEY_UP:
+        switch((dir = getchar())) {
+        case 72:
             snakeHead.y--;
             snakeDir.front() = 1;
             break;
-        case KEY_DOWN:
+        case 80:
             snakeHead.y++;
             snakeDir.front() = 2;
             break;
-        case KEY_LEFT:
+        case 75:
             snakeHead.x--;
             snakeDir.front() = 3;
             break;
-        case KEY_RIGHT:
+        case 77:
             snakeHead.x++;
             snakeDir.front() = 4;
             break;
