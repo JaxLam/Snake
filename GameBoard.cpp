@@ -3,11 +3,11 @@
 #include <iostream>
 #include "system.h"
 
-#ifdef __WIN32
+#ifdef _WIN32
 #define KEY_UP 72
 #define KEY_DOWN 80
 #define KEY_LEFT 75
-#define KEY_DOWN 77
+#define KEY_RIGHT 77
 #else
 #include <curses.h>
 #endif
