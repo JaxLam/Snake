@@ -1,9 +1,7 @@
 #include "GameBoard.h"
-
+#include "system.h"
 #include <iostream>
 #include <iterator>
-#include "system.h"
-
 
 #ifdef _WIN32
 #define KEY_UP 72
@@ -16,6 +14,7 @@
 #define KEY_LEFT 0404
 #define KEY_RIGHT 0405
 #endif
+
 const int snakeLength = 5;
 
 const int MAX_HEIGHT = 25;

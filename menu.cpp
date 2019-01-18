@@ -1,10 +1,8 @@
 #include "menu.h"
-
-#include <iostream>
-#include <string>
-
 #include "Game.h"
 #include "system.h"
+#include <iostream>
+#include <string>
 
 void Menu::excute() {
     mainMenu();

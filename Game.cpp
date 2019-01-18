@@ -1,9 +1,7 @@
 #include "Game.h"
-
-#include <iostream>
-
 #include "GameBoard.h"
 #include "system.h"
+#include <iostream>
 
 void Game::startGame() {
     GameBoard gameBoard;
