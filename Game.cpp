@@ -1,4 +1,7 @@
 #include "Game.h"
+
+#include <iostream>
+
 #include "GameBoard.h"
 #include "system.h"
 
@@ -8,6 +11,9 @@ void Game::startGame() {
     while(true) {
         clearScreen();
         gameBoard.showBoard();
-        gameBoard.move();
+        if(!gameBoard.move()) {
+            std::cout << "Game Over!\n";
+            break;
+        }
     }
 }
