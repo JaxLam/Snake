@@ -139,10 +139,10 @@ void GameBoard::showHead() const{
     switch (snake.front().dir)
     {
     case 1:
-        std::cout << "⁀";
+        std::cout << "A";
         break;
     case 2:
-        std::cout << "‿";
+        std::cout << "V";
         break;
     case 3:
         std::cout << "(";
@@ -151,7 +151,7 @@ void GameBoard::showHead() const{
         std::cout << ")";
         break;
     default:
-        std::cout << "⁀";
+        std::cout << "A";
     }
 }
 
@@ -177,7 +177,7 @@ void GameBoard::changePositions(int x, int y) {
     positions[snake.back().y][snake.back().x] = false;
     if (snakeLength != 1) {
         for (std::list<Coordinate>::iterator it = prev(snake.end());it != snake.begin();it--) {
-            *it = *std::prev(it);
+            *it = *prev(it);
         }
     }
     snake.front().x += x;
@@ -196,8 +196,6 @@ bool GameBoard::checkCollision(int x, int y) {
     bool do_collide = true;
     int temp_x = snake.front().x + x;
     int temp_y = snake.front().y + y;
-             std::cout << "temp_x"  << temp_x << "temp_y" << temp_y << "\n" 
-         << snake.back().x << snake.back().y << "\n";
     if (temp_x == -1 || temp_x == width ||
      temp_y == -1 || temp_y == height 
      || ((temp_x != snake.back().x || 
