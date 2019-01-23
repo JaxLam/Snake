@@ -29,14 +29,14 @@ GameBoard::GameBoard() {
 
     height = MAX_HEIGHT;
     width = MAX_WIDTH;
-    assignPositions();
+    assignBoard();
 
     food = generateCoordinate();
 
     Coordinate snakeHead = generateCoordinate();
     snake.push_back(snakeHead);
     snakeLength = snake.size();
-    positions[snakeHead.y][snakeHead.x] = true;
+    board[snakeHead.y][snakeHead.x] = true;
 }
 
 GameBoard::GameBoard(int newHeight, int newWidth) {
@@ -51,18 +51,18 @@ GameBoard::GameBoard(int newHeight, int newWidth) {
         height = MAX_WIDTH;
         width = MAX_WIDTH;
     }
-    assignPositions();
+    assignBoard();
 
     food = generateCoordinate();
 
     Coordinate snakeHead = generateCoordinate();
     snake.push_back(snakeHead);
     snakeLength = snake.size();
-    positions[snakeHead.y][snakeHead.x] = true;
+    board[snakeHead.y][snakeHead.x] = true;
 }
 
 GameBoard::~GameBoard() {
-    deletePositions();
+    deleteBoard();
 }
 
 void GameBoard::showBoard() const {
@@ -79,7 +79,9 @@ bool GameBoard::move() {
         if (snakeLength == 1 || std::next(it)->dir != 2)
         {
             snake.front().dir = 1;
-            return !checkCollision(0, -1);
+            Coordinate newHead = snake.front();
+            newHead.y--;
+            return !checkAndMove(newHead);
         }
         return true;
         break;
@@ -87,7 +89,9 @@ bool GameBoard::move() {
         if (snakeLength == 1 || std::next(it)->dir != 1)
         {
             snake.front().dir = 2;
-            return !checkCollision(0, 1);
+            Coordinate newHead = snake.front();
+            newHead.y++;
+            return !checkAndMove(newHead);
         }
         return true;
         break;
@@ -95,7 +99,9 @@ bool GameBoard::move() {
         if (snakeLength == 1 || std::next(it)->dir != 4)
         {
             snake.front().dir = 3;
-            return !checkCollision(-1, 0);
+            Coordinate newHead = snake.front();
+            newHead.x--;
+            return !checkAndMove(newHead);        
         }
         return true;
         break;
@@ -103,7 +109,9 @@ bool GameBoard::move() {
         if (snakeLength == 1 || std::next(it)->dir != 3)
         {
             snake.front().dir = 4;
-            return !checkCollision(1, 0);
+            Coordinate newHead = snake.front();
+            newHead.x++;
+            return !checkAndMove(newHead);       
         }
         return true;
         break;
@@ -118,7 +126,7 @@ Coordinate GameBoard::generateCoordinate() {
     std::vector<Coordinate> temp;
     for (int i = 0;i < height;i++) {
         for (int j = 0;j < width;j++) {
-            if (!positions[i][j]) {
+            if (!board[i][j]) {
                 temp.push_back({j, i, 1});
             }
         }
@@ -127,18 +135,6 @@ Coordinate GameBoard::generateCoordinate() {
     int num = temp.size();
     int randomIndex = rand() % num;
     return temp[randomIndex];
-}
-
-bool GameBoard::eatFood(int x, int y) {
-    if (food.y == y && food.x == x) {
-        food.dir = snake.front().dir;
-        snake.insert(snake.begin(), food);
-        snakeLength = snake.size();
-        positions[food.y][food.x] = true;
-        food = generateCoordinate();
-        return true;
-    }
-    return false;
 }
 
 void GameBoard::showSnake() const {
@@ -151,7 +147,7 @@ void GameBoard::showSnake() const {
             else if (i == food.y && j == food.x) {
                 std::cout << "*";
             }
-            else if (positions[i][j]) {
+            else if (board[i][j]) {
                 std::cout << "o";
             }
             else{
@@ -190,18 +186,38 @@ void GameBoard::showBarLine() const {
     std::cout << " " << std::endl;
 }
 
-void GameBoard::assignPositions() {
-    positions = new bool*[height];
-    for (int i = 0; i < height; i++) {
-        positions[i] = new bool[width];
-        for (int j = 0;j < width;j++) {
-            positions[i][j] = false;
+bool GameBoard::checkAndMove(Coordinate newHead) {
+    bool collide = true;
+    if (newHead.x == -1 || newHead.x == width ||
+     newHead.y == -1 || newHead.y == height 
+     || ((newHead.x != snake.back().x || 
+     newHead.y != snake.back().y) && 
+     board[newHead.y][newHead.x])) {
+
+        return collide;
+    }
+    else{
+        if (!eatFood(newHead)) {
+            changeBoard(newHead);
         }
+        return !collide;
     }
 }
 
-void GameBoard::changePositions(int x, int y) {
-    positions[snake.back().y][snake.back().x] = false;
+bool GameBoard::eatFood(Coordinate newHead) {
+    if (food.y == newHead.y && food.x == newHead.x) {
+        food.dir = snake.front().dir;
+        snake.insert(snake.begin(), food);
+        snakeLength = snake.size();
+        board[food.y][food.x] = true;
+        food = generateCoordinate();
+        return true;
+    }
+    return false;
+}
+
+void GameBoard::changeBoard(Coordinate newHead) {
+    board[snake.back().y][snake.back().x] = false;
     if (snakeLength != 1)
     {
         for (std::list<Coordinate>::iterator it = prev(snake.end()); it != snake.begin(); --it)
@@ -209,34 +225,23 @@ void GameBoard::changePositions(int x, int y) {
             *it = *prev(it);
         }
     }
-    snake.front().x += x;
-    snake.front().y += y;
-    positions[snake.front().y][snake.front().x] = true;
+    snake.front() = newHead;
+    board[snake.front().y][snake.front().x] = true;
 }
 
-void GameBoard::deletePositions() {
-    for (int i = 0; i < height;i++) {
-        delete [] positions[i];
-    }
-    delete [] positions;
-}
-
-bool GameBoard::checkCollision(int x, int y) {
-    bool do_collide = true;
-    int temp_x = snake.front().x + x;
-    int temp_y = snake.front().y + y;
-    if (temp_x == -1 || temp_x == width ||
-     temp_y == -1 || temp_y == height 
-     || ((temp_x != snake.back().x || 
-     temp_y != snake.back().y) && 
-     positions[temp_y][temp_x])) {
-
-        return do_collide;
-    }
-    else{
-        if (!eatFood(temp_x, temp_y)) {
-            changePositions(x, y);
+void GameBoard::assignBoard() {
+    board = new bool*[height];
+    for (int i = 0; i < height; i++) {
+        board[i] = new bool[width];
+        for (int j = 0;j < width;j++) {
+            board[i][j] = false;
         }
-        return !do_collide;
     }
+}
+
+void GameBoard::deleteBoard() {
+    for (int i = 0; i < height;i++) {
+        delete [] board[i];
+    }
+    delete [] board;
 }
