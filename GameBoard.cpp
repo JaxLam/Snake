@@ -2,6 +2,10 @@
 #include "system.h"
 #include <iostream>
 #include <iterator>
+#include <vector>
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctime>
 
 #ifdef _WIN32
 #define KEY_UP 72
@@ -15,39 +19,29 @@
 #define KEY_RIGHT 0405
 #endif
 
-const int snakeLength = 5;
-
 const int MAX_HEIGHT = 25;
 const int MAX_WIDTH = 50;
 const int MIN_HEIGHT = 5;
 const int MIN_WIDTH = 5;
 
 GameBoard::GameBoard() {
+    srand(time(NULL));
+
     height = MAX_HEIGHT;
     width = MAX_WIDTH;
-    Coordinate snakeHead = {25, 10, 4},
-               snake2 = {24, 10, 4},
-               snake3 = {23, 10, 4},
-               snake4 = {22, 10, 4},
-               snake5 = {21, 10, 4},
-               snake6 = {20, 10, 4};
-    snake.push_back(snakeHead);
-    snake.push_back(snake2);
-    snake.push_back(snake3);
-    snake.push_back(snake4);
-    snake.push_back(snake5);
-    snake.push_back(snake6);
-
     assignPositions();
+
+    food = generateCoordinate();
+
+    Coordinate snakeHead = generateCoordinate();
+    snake.push_back(snakeHead);
+    snakeLength = snake.size();
     positions[snakeHead.y][snakeHead.x] = true;
-    positions[10][24] = true;
-    positions[10][23] = true;
-    positions[10][22] = true;
-    positions[10][21] = true;
-    positions[10][20] = true;
 }
 
 GameBoard::GameBoard(int newHeight, int newWidth) {
+    srand(time(NULL));
+
     if ((newHeight > MIN_HEIGHT) && (newWidth > MIN_WIDTH) && 
     (newHeight < MAX_HEIGHT) && (newWidth < MAX_WIDTH)) {
         height = newHeight;
@@ -57,9 +51,13 @@ GameBoard::GameBoard(int newHeight, int newWidth) {
         height = MAX_WIDTH;
         width = MAX_WIDTH;
     }
-    Coordinate snakeHead = {25, 10, 1};
-    snake.push_back(snakeHead);
     assignPositions();
+
+    food = generateCoordinate();
+
+    Coordinate snakeHead = generateCoordinate();
+    snake.push_back(snakeHead);
+    snakeLength = snake.size();
     positions[snakeHead.y][snakeHead.x] = true;
 }
 
@@ -116,12 +114,42 @@ bool GameBoard::move() {
     return false;
 }
 
+Coordinate GameBoard::generateCoordinate() {
+    std::vector<Coordinate> temp;
+    for (int i = 0;i < height;i++) {
+        for (int j = 0;j < width;j++) {
+            if (!positions[i][j]) {
+                temp.push_back({j, i, 1});
+            }
+        }
+    }
+
+    int num = temp.size();
+    int randomIndex = rand() % num;
+    return temp[randomIndex];
+}
+
+bool GameBoard::eatFood(int x, int y) {
+    if (food.y == y && food.x == x) {
+        food.dir = snake.front().dir;
+        snake.insert(snake.begin(), food);
+        snakeLength = snake.size();
+        positions[food.y][food.x] = true;
+        food = generateCoordinate();
+        return true;
+    }
+    return false;
+}
+
 void GameBoard::showSnake() const {
     for (int i = 0;i < height; i++) {
         std::cout << "|";
         for (int j = 0; j < width; j++) {
             if (i==snake.front().y && j == snake.front().x) {
                 showHead();
+            }
+            else if (i == food.y && j == food.x) {
+                std::cout << "*";
             }
             else if (positions[i][j]) {
                 std::cout << "o";
@@ -174,8 +202,10 @@ void GameBoard::assignPositions() {
 
 void GameBoard::changePositions(int x, int y) {
     positions[snake.back().y][snake.back().x] = false;
-    if (snakeLength != 1) {
-        for (std::list<Coordinate>::iterator it = prev(snake.end());it != snake.begin();it--) {
+    if (snakeLength != 1)
+    {
+        for (std::list<Coordinate>::iterator it = prev(snake.end()); it != snake.begin(); --it)
+        {
             *it = *prev(it);
         }
     }
@@ -204,7 +234,9 @@ bool GameBoard::checkCollision(int x, int y) {
         return do_collide;
     }
     else{
-        changePositions(x, y);
+        if (!eatFood(temp_x, temp_y)) {
+            changePositions(x, y);
+        }
         return !do_collide;
     }
 }

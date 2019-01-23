@@ -21,9 +21,11 @@ class GameBoard {
     int height;
     int width;
     std::list<Coordinate> snake;
-    // int snakeLength;
+    int snakeLength;
     bool** positions;
-    int food;
+    Coordinate food;
+    Coordinate generateCoordinate();
+    bool eatFood(int x, int y);
     void showSnake() const;
     void showHead() const;
     bool checkCollision(int x, int y);
