@@ -3,6 +3,7 @@
 #include <iostream>
 #include <iterator>
 #include <vector>
+#include <ctime>
 
 const int MAX_HEIGHT = 25;
 const int MAX_WIDTH = 50;
