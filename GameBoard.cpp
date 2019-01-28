@@ -108,6 +108,30 @@ bool GameBoard::move() {
     return false;
 }
 
+bool GameBoard::autoMove() {
+    Coordinate newHead = snake.front();
+    switch(snake.front().dir) {
+        case 1:
+            newHead.y--;
+            return !checkAndMove(newHead);
+            break;
+        case 2:
+            newHead.y++;
+            return !checkAndMove(newHead);
+            break;
+        case 3:
+            newHead.x--;
+            return !checkAndMove(newHead);
+            break;
+        case 4:
+            newHead.y++;
+            return !checkAndMove(newHead);
+            break;
+        default:
+            return true;
+    }
+}
+
 Coordinate GameBoard::generateCoordinate() {
     std::vector<Coordinate> temp;
     for (int i = 0;i < height;i++) {
@@ -184,7 +208,7 @@ bool GameBoard::checkAndMove(Coordinate newHead) {
     }
     else{
         if (!eatFood(newHead)) {
-            changeBoard(newHead);
+            justMove(newHead);
         }
         return !collide;
     }
@@ -202,7 +226,7 @@ bool GameBoard::eatFood(Coordinate newHead) {
     return false;
 }
 
-void GameBoard::changeBoard(Coordinate newHead) {
+void GameBoard::justMove(Coordinate newHead) {
     board[snake.back().y][snake.back().x] = false;
     if (snakeLength != 1)
     {

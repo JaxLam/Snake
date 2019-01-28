@@ -16,21 +16,26 @@ class GameBoard {
     ~GameBoard();
     void showBoard() const;
     bool move();
+    bool autoMove();
 
   private:
     int height;
     int width;
     std::list<Coordinate> snake;
     int snakeLength;
-    bool** board;
     Coordinate food;
+    bool** board;
+
     Coordinate generateCoordinate();
+
     void showSnake() const;
     void showHead() const;
     void showBarLine() const;
+
     bool checkAndMove(Coordinate newHead);
     bool eatFood(Coordinate newHead);
-    void changeBoard(Coordinate newHead);
+    void justMove(Coordinate newHead);
+
     void assignBoard();
     void deleteBoard();
 };
